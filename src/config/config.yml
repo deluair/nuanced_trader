@@ -1,0 +1,109 @@
+# Trading Configuration
+
+# General Settings
+general:
+  log_level: INFO
+  base_currency: USDT
+  live_trading: false  # Set to true for live trading, false for paper trading
+  data_directory: data/
+  max_open_trades: 5
+  stake_amount: 100  # Amount per trade in base currency
+  dry_run: true  # Set to false for real trading
+
+# Exchange Settings
+exchange:
+  name: binance  # Options: binance, coinbase, kraken, etc.
+  paper_trading: true  # Use exchange's paper trading if available
+  api_key_env: BINANCE_API_KEY
+  api_secret_env: BINANCE_API_SECRET
+  timeframe: 1h  # Options: 1m, 5m, 15m, 1h, 4h, 1d
+  trading_pairs:
+    - BTC/USDT
+    - ETH/USDT
+    - SOL/USDT
+    - BNB/USDT
+    - XRP/USDT
+
+# Strategy Settings
+strategy:
+  name: adaptive_momentum  # Default strategy to use
+  parameters:
+    # Trend Following Parameters
+    sma_short: 20
+    sma_long: 50
+    ema_short: 9
+    ema_long: 21
+    
+    # Momentum Parameters
+    rsi_period: 14
+    rsi_overbought: 70
+    rsi_oversold: 30
+    
+    # Mean Reversion Parameters
+    bollinger_period: 20
+    bollinger_std: 2
+    
+    # Machine Learning Parameters
+    ml_enabled: true
+    feature_window: 20
+    prediction_window: 5
+    model_type: random_forest  # Options: random_forest, gradient_boosting, neural_network
+    
+    # Sentiment Analysis
+    sentiment_enabled: false
+    sentiment_threshold: 0.6
+    sentiment_impact: 0.2  # Weight of sentiment in decision (0.0 to 1.0)
+
+# Risk Management Settings
+risk_management:
+  max_risk_per_trade: 0.02  # Maximum risk as percentage of portfolio per trade
+  stop_loss:
+    enabled: true
+    type: trailing  # Options: fixed, trailing, atr
+    percentage: 0.05  # 5% stop loss for fixed type
+    atr_multiplier: 3  # For ATR-based stop loss
+    trailing_offset: 0.02  # 2% trailing offset for trailing stop
+  
+  take_profit:
+    enabled: true
+    type: adaptive  # Options: fixed, trailing, scaled
+    percentage: 0.1  # 10% take profit for fixed type
+    scaled_levels: [0.05, 0.1, 0.2]  # Take profit at these levels (scaled exit)
+    scaled_amounts: [0.3, 0.3, 0.4]  # Percentage of position to exit at each level
+  
+  position_sizing:
+    method: risk_based  # Options: fixed, risk_based, kelly
+    kelly_fraction: 0.5  # Only used if method is kelly
+
+# Backtesting Settings
+backtesting:
+  start_date: 2023-01-01
+  end_date: 2023-12-31
+  fee: 0.001  # Exchange fee (0.1%)
+  cache_data: true
+  plot_results: true
+  
+# Performance Metrics to Calculate
+performance_metrics:
+  - total_return
+  - max_drawdown
+  - win_rate
+  - profit_factor
+  - sharpe_ratio
+  - sortino_ratio
+  - calmar_ratio
+  - expectancy
+
+# Notifications
+notifications:
+  email:
+    enabled: false
+    smtp_server: smtp.gmail.com
+    smtp_port: 587
+    sender_email: your_email@gmail.com
+    receiver_email: your_email@gmail.com
+  
+  telegram:
+    enabled: false
+    bot_token: your_bot_token
+    chat_id: your_chat_id 

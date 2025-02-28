@@ -1,0 +1,59 @@
+general:
+  log_level: INFO
+  data_directory: data
+  cache_data: true
+  max_candles: 1000
+  backtesting_mode: false
+  dry_run: true  # Ensure we're not making real trades
+
+exchange:
+  name: coinbase
+  paper_trading: true  # Enable paper trading
+  api_key: 4469daa3-ca51-4bc0-8307-d5ff1f9b1c1d  # The provided API key
+  api_secret: ""  # This should be set as an environment variable for security
+  api_key_env: COINBASE_API_KEY
+  api_secret_env: COINBASE_API_SECRET
+  trading_pairs: ["BTC/USD", "ETH/USD", "SOL/USD"]
+  timeframe: 1h
+
+strategy:
+  name: AdaptiveMomentumStrategy
+  parameters:
+    short_window: 20
+    long_window: 50
+    rsi_period: 14
+    rsi_overbought: 70
+    rsi_oversold: 30
+    adx_period: 14
+    adx_threshold: 25
+    bollinger_period: 20
+    bollinger_std: 2.0
+    volatility_period: 20
+    trend_strength_threshold: 25
+
+risk_management:
+  max_risk_per_trade: 2.0  # Percentage of account
+  max_total_risk: 15.0  # Percentage of account
+  stop_loss:
+    enabled: true
+    atr_multiplier: 2.0
+  take_profit:
+    enabled: true
+    atr_multiplier: 3.0
+    scaling: true
+    scaled_amounts: [0.33, 0.33, 0.34]
+  position_sizing: risk_based  # risk_based, percent_based, or fixed
+
+notifications:
+  enabled: true
+  email:
+    enabled: false
+    smtp_server: smtp.gmail.com
+    smtp_port: 587
+    sender_email: ""
+    receiver_email: ""
+    password: ""
+  telegram:
+    enabled: false
+    bot_token: ""
+    chat_id: "" 
