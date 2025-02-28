@@ -415,4 +415,152 @@ footer {
     .workflow-step {
         flex-direction: column;
     }
+}
+
+/* Bot Status Section */
+.bot-status {
+    padding: 3rem 0;
+    background-color: var(--light-bg);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bot-status h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.status-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.status-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+}
+
+.status-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #999;
+    margin-right: 10px;
+    position: relative;
+}
+
+.status-dot.online {
+    background-color: var(--success-color);
+    box-shadow: 0 0 10px var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.offline {
+    background-color: var(--danger-color);
+}
+
+.status-dot.warning {
+    background-color: var(--warning-color);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 184, 148, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 184, 148, 0);
+    }
+}
+
+.status-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.status-details {
+    margin-bottom: 1.5rem;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.status-label {
+    font-weight: 600;
+    color: var(--light-text);
+}
+
+.status-value {
+    font-weight: 500;
+}
+
+.activity-log {
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.activity-item {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.activity-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.activity-timestamp {
+    font-size: 0.8rem;
+    color: var(--light-text);
+    margin-right: 0.5rem;
+}
+
+.activity-message {
+    font-size: 0.9rem;
+}
+
+.activity-message.trade {
+    color: var(--primary-color);
+}
+
+.activity-message.error {
+    color: var(--danger-color);
+}
+
+.activity-message.info {
+    color: var(--secondary-color);
+}
+
+#refresh-status {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .status-container {
+        grid-template-columns: 1fr;
+    }
 } 

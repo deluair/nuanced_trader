@@ -14,4 +14,6 @@ python-telegram-bot==20.5
 backtrader==1.9.76.123
 pytest==7.4.0
 jsonschema==4.19.0
-tqdm==4.66.1 
+tqdm==4.66.1
+flask==2.3.3
+flask-cors==4.0.0 

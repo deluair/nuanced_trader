@@ -41,6 +41,45 @@
         </div>
     </section>
 
+    <section class="bot-status">
+        <div class="container">
+            <h2>Bot Status</h2>
+            <div class="status-container">
+                <div class="status-card">
+                    <div class="status-indicator" id="bot-status-indicator">
+                        <span class="status-dot"></span>
+                        <span class="status-text" id="status-text">Checking status...</span>
+                    </div>
+                    <div class="status-details">
+                        <div class="status-item">
+                            <span class="status-label">Last Active:</span>
+                            <span class="status-value" id="last-active">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Running Since:</span>
+                            <span class="status-value" id="running-since">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Trading Mode:</span>
+                            <span class="status-value" id="trading-mode">--</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Active Pairs:</span>
+                            <span class="status-value" id="active-pairs">--</span>
+                        </div>
+                    </div>
+                    <button id="refresh-status" class="btn btn-primary">Refresh Status</button>
+                </div>
+                <div class="status-card">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-log" id="activity-log">
+                        <p>No recent activity to display</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="features" class="features">
         <div class="container">
             <h2>Key Features</h2>

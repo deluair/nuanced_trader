@@ -16,6 +16,7 @@ import time
 import signal
 import argparse
 import yaml
+import threading
 from pathlib import Path
 from dotenv import load_dotenv
 from loguru import logger
@@ -32,6 +33,7 @@ from src.strategies.strategy_factory import StrategyFactory
 from src.risk_management.risk_manager import RiskManager
 from src.data.data_provider import DataProvider
 from src.utils.notification_manager import NotificationManager
+from src.api.status_endpoint import update_bot_status, add_activity, run_api_server
 
 class TradingBot:
     """
@@ -107,6 +109,9 @@ class TradingBot:
             config=self.config["notifications"]
         )
         
+        # Initialize API server
+        self.api_server_thread = None
+        
         logger.info("Bot components initialized successfully")
     
     def start(self):
@@ -117,6 +122,19 @@ class TradingBot:
         
         self.is_running = True
         logger.info("Starting trading bot...")
+        
+        # Update status to online
+        update_bot_status("online")
+        add_activity("Trading bot started", "info")
+        
+        # Start API server in a separate thread
+        self.api_server_thread = threading.Thread(
+            target=run_api_server,
+            args=('0.0.0.0', 5000, False),
+            daemon=True
+        )
+        self.api_server_thread.start()
+        logger.info("API server started on port 5000")
         
         # Notify start
         self.notification_manager.send_message("Trading bot started")
@@ -174,6 +192,9 @@ class TradingBot:
             # Apply risk management to signals
             filtered_signals = self.risk_manager.apply_risk_management(signals)
             
+            # Add activity log
+            add_activity(f"Trading cycle: Generated {len(signals)} signals, {len(filtered_signals)} passed risk checks", "info")
+            
             # Execute trades
             if not self.config["general"]["dry_run"]:
                 for signal in filtered_signals:
@@ -182,11 +203,14 @@ class TradingBot:
                 logger.info(f"Dry run mode: would execute {len(filtered_signals)} trades")
                 for signal in filtered_signals:
                     logger.info(f"Signal: {signal}")
+                    # Log signals in dry run mode
+                    add_activity(f"Dry run: {signal['action']} {signal['pair']} at {signal.get('price', 'market')}", "trade")
             
             logger.info("Trading cycle completed")
         except Exception as e:
             logger.error(f"Error during trading cycle: {str(e)}")
             self.notification_manager.send_message(f"Error in trading cycle: {str(e)}")
+            add_activity(f"Error in trading cycle: {str(e)}", "error")
     
     def _execute_trade(self, signal):
         """
@@ -213,6 +237,10 @@ class TradingBot:
                     order = self.exchange.create_market_sell_order(pair, amount)
             
             logger.info(f"Executed {action} order for {pair}: {order}")
+            
+            # Add activity log for the trade
+            add_activity(f"Executed {action} for {pair} at {price if price else 'market price'}", "trade")
+            
             self.notification_manager.send_message(
                 f"Executed {action} order for {pair}\n"
                 f"Amount: {amount}\n"
@@ -227,6 +255,7 @@ class TradingBot:
             self.notification_manager.send_message(
                 f"Error executing {action} order for {pair}: {str(e)}"
             )
+            add_activity(f"Error executing {action} for {pair}: {str(e)}", "error")
     
     def _apply_risk_orders(self, signal, order):
         """Apply stop loss and take profit orders based on config."""
@@ -288,18 +317,19 @@ class TradingBot:
     
     def stop(self):
         """Stop the trading bot."""
+        if not self.is_running:
+            logger.warning("Trading bot is already stopped")
+            return
+        
         logger.info("Stopping trading bot...")
         self.is_running = False
         
-        # Cancel all schedules
-        schedule.clear()
-        
-        # Clean up resources
-        # (Exchange connection, database connections, etc.)
+        # Update status to offline
+        update_bot_status("offline")
+        add_activity("Trading bot stopped", "info")
         
         # Notify stop
         self.notification_manager.send_message("Trading bot stopped")
-        logger.info("Trading bot stopped")
     
     def _handle_exit(self, signum, frame):
         """Handle exit signals for clean shutdown."""
